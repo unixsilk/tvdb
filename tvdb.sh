@@ -6,7 +6,7 @@ r=0
 echo "enter tvdbid"
 read -r tvdbid
 mkdir tmp
-curl -Ls -o /dev/null -w %{url_effective} https://www.thetvdb.com/dereferrer/series/"$tvdbid" | sed 's,$,\/allseasons\/official,' | xargs curl -s | grep -o S[0-99][0-99]E[0-9999][0-9999] > tmp/data.txt
+curl -Ls -o /dev/null -w %{url_effective} https://www.thetvdb.com/dereferrer/series/"$tvdbid" | sed 's,$,\/allseasons\/official,' | xargs curl -s | grep -o "S[0-99][0-99]E[0-9999][0-9999]" > tmp/data.txt
 curl -Ls -o /dev/null -w %{url_effective} https://www.thetvdb.com/dereferrer/series/"$tvdbid" | sed 's,$,\/allseasons\/official,' > tmp/url.txt
 
 python << END
@@ -63,8 +63,13 @@ paste -d "/" tmp/tell.txt tmp/more.txt > tmp/kissme.txt
 paste -d "/" tmp/kissme.txt tmp/mari.txt > tmp/oxi.txt
 paste -d "@" tmp/tokyo.txt tmp/oxi.txt > tmp/titan.txt 
 try=$(grep -c "^S*E01" tmp/data.txt)
-vicky=$(cat tmp/bass.txt)
-export vicky
+
+#vicky=$(cat tmp/bass.txt)
+#export vicky
+
+export vicky=$(cat tmp/bass.txt)
+
+
 seq -w 01 "$try" > tmp/scream.txt
 cd "$vicky" || exit
 <../tmp/scream.txt xargs -I{} -P1 bash -c 'mkdir S"{}"\ "-"\ "$vicky"'
